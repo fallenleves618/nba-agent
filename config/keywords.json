@@ -1,0 +1,61 @@
+{
+  "include_any": [],
+  "terms": [
+    {
+      "name": "湖人",
+      "category": "team",
+      "aliases": ["湖人", "lakers"]
+    },
+    {
+      "name": "勇士",
+      "category": "team",
+      "aliases": ["勇士", "warriors"]
+    },
+    {
+      "name": "勒布朗-詹姆斯",
+      "category": "player",
+      "aliases": ["勒布朗-詹姆斯", "勒布朗", "老詹", "lbj"],
+      "weak_aliases": ["詹姆斯"],
+      "exclude_aliases": ["詹姆斯-哈登", "james harden"]
+    },
+    {
+      "name": "斯蒂芬-库里",
+      "category": "player",
+      "aliases": ["斯蒂芬-库里", "斯蒂芬", "steph curry"],
+      "weak_aliases": ["库里"],
+      "exclude_aliases": ["塞思-库里", "seth curry", "小库里"]
+    },
+    {
+      "name": "东契奇",
+      "category": "player",
+      "aliases": ["东契奇", "卢卡", "luka", "luka doncic"]
+    },
+    {
+      "name": "交易",
+      "category": "topic",
+      "aliases": ["交易", "转会", "签约"]
+    },
+    {
+      "name": "伤病",
+      "category": "topic",
+      "aliases": ["伤病", "受伤", "伤势", "缺阵", "报销"]
+    },
+    {
+      "name": "复出",
+      "category": "topic",
+      "aliases": ["复出", "回归", "回到训练馆", "恢复性训练"]
+    }
+  ],
+  "exclude_any": [
+    "CBA",
+    "英超",
+    "足球",
+    "电竞"
+  ],
+  "groups": [
+    ["勒布朗-詹姆斯", "伤病"],
+    ["斯蒂芬-库里", "复出"],
+    ["湖人", "交易"],
+    ["勇士", "交易"]
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "enabled": false,
+  "max_forums_per_query": 3,
+  "query_categories": ["team", "player"],
+  "experimental_thread_fetch_enabled": false,
+  "experimental_thread_fetch_mode": "ws",
+  "max_forums_for_threads": 4,
+  "max_threads_per_forum": 10
+}

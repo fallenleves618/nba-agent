@@ -1,0 +1,13 @@
+{
+  "enabled": false,
+  "summary_enabled": true,
+  "api_base_url": "${NBA_AGENT_OPENAI_BASE}",
+  "api_key": "${NBA_AGENT_OPENAI_API_KEY}",
+  "model": "${NBA_AGENT_OPENAI_MODEL}",
+  "api_mode": "responses",
+  "reasoning_effort": "medium",
+  "timeout_seconds": 12,
+  "batch_size": 8,
+  "min_score": 6,
+  "summary_top_n": 5
+}

@@ -1,0 +1,17 @@
+{
+  "console": {
+    "enabled": true
+  },
+  "feishu": {
+    "enabled": true,
+    "webhook_url": "https://open.feishu.cn/open-apis/bot/v2/hook/be8f5f95-253b-4221-8571-e7bc4bbc5829",
+    "secret": "",
+    "msg_type": "text"
+  },
+  "wecom": {
+    "enabled": false,
+    "webhook_url": "${WECOM_BOT_WEBHOOK}",
+    "secret": "",
+    "msg_type": "markdown"
+  }
+}

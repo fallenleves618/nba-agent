@@ -1,0 +1,239 @@
+{
+  "max_detail_fetches": 10,
+  "zone_template": {
+    "name_template": "hupu_team_zone_{key}",
+    "url_template": "https://bbs.hupu.com/{slug}"
+  },
+  "list_sources": [
+    {
+      "name": "hupu_mobile_home",
+      "url": "https://m.hupu.com/home",
+      "enabled": true,
+      "max_items": 10
+    },
+    {
+      "name": "hupu_basketball_news",
+      "url": "https://bbs.hupu.com/502",
+      "enabled": true,
+      "max_items": 10
+    },
+    {
+      "name": "hupu_nba_board",
+      "url": "https://bbs.hupu.com/nba",
+      "enabled": true,
+      "max_items": 10
+    }
+  ],
+  "team_presets": [
+    {
+      "key": "lakers",
+      "label": "湖人专区",
+      "slug": "lakers",
+      "enabled": true,
+      "max_items": 10
+    },
+    {
+      "key": "warriors",
+      "label": "勇士专区",
+      "slug": "warriors",
+      "enabled": true,
+      "max_items": 10
+    },
+    {
+      "key": "celtics",
+      "label": "凯尔特人专区",
+      "slug": "celtics",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "knicks",
+      "label": "尼克斯专区",
+      "slug": "knicks",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "mavericks",
+      "label": "独行侠专区",
+      "slug": "mavericks",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "rockets",
+      "label": "火箭专区",
+      "slug": "rockets",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "thunder",
+      "label": "雷霆专区",
+      "slug": "thunder",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "suns",
+      "label": "太阳专区",
+      "slug": "suns",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "nuggets",
+      "label": "掘金专区",
+      "slug": "nuggets",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "clippers",
+      "label": "快船专区",
+      "slug": "clippers",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "spurs",
+      "label": "马刺专区",
+      "slug": "spurs",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "timberwolves",
+      "label": "森林狼专区",
+      "slug": "timberwolves",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "bucks",
+      "label": "雄鹿专区",
+      "slug": "bucks",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "heat",
+      "label": "热火专区",
+      "slug": "heat",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "sixers",
+      "label": "76人专区",
+      "slug": "sixers",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "cavaliers",
+      "label": "骑士专区",
+      "slug": "cavaliers",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "grizzlies",
+      "label": "灰熊专区",
+      "slug": "grizzlies",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "kings",
+      "label": "国王专区",
+      "slug": "kings",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "bulls",
+      "label": "公牛专区",
+      "slug": "bulls",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "nets",
+      "label": "篮网专区",
+      "slug": "nets",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "raptors",
+      "label": "猛龙专区",
+      "slug": "raptors",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "magic",
+      "label": "魔术专区",
+      "slug": "magic",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "pelicans",
+      "label": "鹈鹕专区",
+      "slug": "pelicans",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "hawks",
+      "label": "老鹰专区",
+      "slug": "hawks",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "pacers",
+      "label": "步行者专区",
+      "slug": "pacers",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "pistons",
+      "label": "活塞专区",
+      "slug": "pistons",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "jazz",
+      "label": "爵士专区",
+      "slug": "jazz",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "trail_blazers",
+      "label": "开拓者专区",
+      "slug": "trailblazers",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "hornets",
+      "label": "黄蜂专区",
+      "slug": "hornets",
+      "enabled": false,
+      "max_items": 10
+    },
+    {
+      "key": "wizards",
+      "label": "奇才专区",
+      "slug": "wizards",
+      "enabled": false,
+      "max_items": 10
+    }
+  ]
+}
