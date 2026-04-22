@@ -1,0 +1,524 @@
+{
+  "filter_cases": [
+    {
+      "id": "filter_01",
+      "source": "hupu",
+      "title": "湖人赢球！詹姆斯准三双，末节掌控比赛",
+      "content_excerpt": "詹姆斯得到19分8篮板13助攻，季后赛首轮G1湖人取胜。",
+      "matched_keywords": ["湖人", "勒布朗-詹姆斯"],
+      "matched_categories": ["team", "player"],
+      "score": 8,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_02",
+      "source": "hupu",
+      "title": "东契奇恢复训练，雷迪克称暂未参加投篮训练",
+      "content_excerpt": "东契奇已经回到训练馆，开始篮板和传球恢复训练。",
+      "matched_keywords": ["东契奇", "复出"],
+      "matched_categories": ["player", "topic"],
+      "score": 7,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_03",
+      "source": "hupu",
+      "title": "詹姆斯历史地位讨论帖",
+      "content_excerpt": "球迷围绕历史第一小前锋展开主观讨论，信息增量较少。",
+      "matched_keywords": ["勒布朗-詹姆斯"],
+      "matched_categories": ["player"],
+      "score": 3,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_04",
+      "source": "tieba",
+      "title": "贴吧社区: 湖人吧",
+      "content_excerpt": "吧简介: 湖人球迷交流社区；成员 100000，主题 500000。",
+      "matched_keywords": ["湖人"],
+      "matched_categories": ["team"],
+      "score": 2,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_05",
+      "source": "hupu",
+      "title": "杜兰特因膝盖伤势缺席G1，G2出战待定",
+      "content_excerpt": "名记跟进杜兰特伤情，火箭对其复出保持乐观。",
+      "matched_keywords": ["伤病", "复出"],
+      "matched_categories": ["topic"],
+      "score": 6,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_06",
+      "source": "hupu",
+      "title": "今年休赛期交易雷霆杰威大计",
+      "content_excerpt": "用户提出多个虚拟交易方案，缺少真实消息来源。",
+      "matched_keywords": ["交易"],
+      "matched_categories": ["topic"],
+      "score": 2,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_07",
+      "source": "hupu",
+      "title": "八村垒：东契奇归队后球队氛围明显不同",
+      "content_excerpt": "八村垒接受采访谈东契奇回归和更衣室影响力。",
+      "matched_keywords": ["湖人", "东契奇"],
+      "matched_categories": ["team", "player"],
+      "score": 6,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_08",
+      "source": "hupu",
+      "title": "勇士球迷回忆库里新秀年",
+      "content_excerpt": "偏情怀回忆帖，没有当天新的比赛或消息。",
+      "matched_keywords": ["勇士", "斯蒂芬-库里"],
+      "matched_categories": ["team", "player"],
+      "score": 2,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_09",
+      "source": "hupu",
+      "title": "Shams：杜兰特G2复出仍有希望，但要看恢复反应",
+      "content_excerpt": "消息来自权威记者节目更新，直接涉及系列赛走势。",
+      "matched_keywords": ["伤病", "复出"],
+      "matched_categories": ["topic"],
+      "score": 7,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_10",
+      "source": "hupu",
+      "title": "湖人选秀权应该选人还是交易？",
+      "content_excerpt": "开放讨论帖，以球迷主观判断为主。",
+      "matched_keywords": ["湖人", "交易"],
+      "matched_categories": ["team", "topic"],
+      "score": 3,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_11",
+      "source": "hupu",
+      "title": "珍妮-巴斯：詹姆斯今夏决定权在自己手里，也可能直接退役",
+      "content_excerpt": "湖人老板在电台节目里谈詹姆斯未来去向。",
+      "matched_keywords": ["湖人", "勒布朗-詹姆斯"],
+      "matched_categories": ["team", "player"],
+      "score": 7,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_12",
+      "source": "hupu",
+      "title": "库里老婆晒科切拉动态，球迷评论热闹",
+      "content_excerpt": "偏场外生活内容，与当天比赛信息关系较弱。",
+      "matched_keywords": ["斯蒂芬-库里"],
+      "matched_categories": ["player"],
+      "score": 2,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_13",
+      "source": "hupu",
+      "title": "雷迪克：东契奇回归后会继续观察训练负荷",
+      "content_excerpt": "球队会逐步提升东契奇训练强度，暂不急于复出。",
+      "matched_keywords": ["湖人", "东契奇", "复出"],
+      "matched_categories": ["team", "player", "topic"],
+      "score": 7,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_14",
+      "source": "hupu",
+      "title": "如果湖人休赛期交易来第三持球点会怎样？",
+      "content_excerpt": "纯假设讨论，没有真实消息来源。",
+      "matched_keywords": ["湖人", "交易"],
+      "matched_categories": ["team", "topic"],
+      "score": 3,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_15",
+      "source": "hupu",
+      "title": "韦德：听说杜兰特缺阵后，我就知道詹姆斯会掌控比赛",
+      "content_excerpt": "韦德在节目中点评詹姆斯在季后赛首战的表现。",
+      "matched_keywords": ["勒布朗-詹姆斯", "伤病"],
+      "matched_categories": ["player", "topic"],
+      "score": 7,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_16",
+      "source": "hupu",
+      "title": "勇士还能靠库里再冲一次吗？",
+      "content_excerpt": "主观讨论勇士未来，没有新的比赛或人员动态。",
+      "matched_keywords": ["勇士", "斯蒂芬-库里"],
+      "matched_categories": ["team", "player"],
+      "score": 2,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_17",
+      "source": "hupu",
+      "title": "美媒更新近框终结命中率，詹姆斯排进联盟前列",
+      "content_excerpt": "数据榜单展示詹姆斯本赛季近框终结效率。",
+      "matched_keywords": ["勒布朗-詹姆斯"],
+      "matched_categories": ["player"],
+      "score": 5,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_18",
+      "source": "hupu",
+      "title": "回顾库里生涯十大经典时刻",
+      "content_excerpt": "内容偏历史盘点，不属于当天高价值信息。",
+      "matched_keywords": ["斯蒂芬-库里"],
+      "matched_categories": ["player"],
+      "score": 2,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_19",
+      "source": "hupu",
+      "title": "杜兰特训练中拼抢地板球受伤，伤势来源曝光",
+      "content_excerpt": "报道披露杜兰特膝伤发生在训练对抗中。",
+      "matched_keywords": ["伤病"],
+      "matched_categories": ["topic"],
+      "score": 6,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_20",
+      "source": "tieba",
+      "title": "贴吧社区: 勇士吧",
+      "content_excerpt": "勇士球迷讨论社区，成员和主题规模较大。",
+      "matched_keywords": ["勇士"],
+      "matched_categories": ["team"],
+      "score": 2,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_21",
+      "source": "hupu",
+      "title": "詹姆斯：会继续观察脚踝情况，但倾向继续出战",
+      "content_excerpt": "赛后表态直接关系后续比赛和出战状态。",
+      "matched_keywords": ["勒布朗-詹姆斯", "伤病"],
+      "matched_categories": ["player", "topic"],
+      "score": 7,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_22",
+      "source": "hupu",
+      "title": "湖人球迷自制詹姆斯海报合集",
+      "content_excerpt": "二创内容，讨论热度虽高但信息密度很低。",
+      "matched_keywords": ["湖人", "勒布朗-詹姆斯"],
+      "matched_categories": ["team", "player"],
+      "score": 1,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_23",
+      "source": "hupu",
+      "title": "卡佩拉：没人能取代杜兰特，希望他下一场回归",
+      "content_excerpt": "球员采访直接关联杜兰特伤病和G2预期。",
+      "matched_keywords": ["伤病", "复出"],
+      "matched_categories": ["topic"],
+      "score": 6,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_24",
+      "source": "hupu",
+      "title": "湖人专区热帖汇总：今天最强阵容怎么排？",
+      "content_excerpt": "高互动但以主观阵容猜想为主。",
+      "matched_keywords": ["湖人"],
+      "matched_categories": ["team"],
+      "score": 2,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_25",
+      "source": "hupu",
+      "title": "八村垒：很多人不知道东契奇在场下的影响力",
+      "content_excerpt": "采访涉及东契奇回归和球队内部化学反应。",
+      "matched_keywords": ["湖人", "东契奇"],
+      "matched_categories": ["team", "player"],
+      "score": 6,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_26",
+      "source": "hupu",
+      "title": "如果当年库里被交易，NBA会怎样？",
+      "content_excerpt": "典型假设历史帖，不提供当天信息。",
+      "matched_keywords": ["斯蒂芬-库里", "交易"],
+      "matched_categories": ["player", "topic"],
+      "score": 2,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_27",
+      "source": "hupu",
+      "title": "名记：太阳对杜兰特恢复持谨慎乐观态度",
+      "content_excerpt": "权威记者更新伤病与复出前景。",
+      "matched_keywords": ["伤病", "复出"],
+      "matched_categories": ["topic"],
+      "score": 7,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_28",
+      "source": "hupu",
+      "title": "勇士球迷票选队史最佳阵容",
+      "content_excerpt": "社区互动帖，几乎没有新闻性信息。",
+      "matched_keywords": ["勇士", "斯蒂芬-库里"],
+      "matched_categories": ["team", "player"],
+      "score": 1,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_29",
+      "source": "hupu",
+      "title": "湖人主场G1取胜后，詹姆斯刷新季后赛最老助攻上双纪录",
+      "content_excerpt": "比赛结果加里程碑信息，具备高摘要价值。",
+      "matched_keywords": ["湖人", "勒布朗-詹姆斯"],
+      "matched_categories": ["team", "player"],
+      "score": 8,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_30",
+      "source": "hupu",
+      "title": "湖人休赛期自由球员名单猜想",
+      "content_excerpt": "球迷自行整理预测名单，不是正式报道。",
+      "matched_keywords": ["湖人", "交易"],
+      "matched_categories": ["team", "topic"],
+      "score": 2,
+      "expected_keep": false
+    },
+    {
+      "id": "filter_31",
+      "source": "hupu",
+      "title": "东契奇有望在系列赛中段复出，球队将根据恢复调整安排",
+      "content_excerpt": "涉及明确时间窗口和医疗恢复节奏。",
+      "matched_keywords": ["东契奇", "复出"],
+      "matched_categories": ["player", "topic"],
+      "score": 7,
+      "expected_keep": true
+    },
+    {
+      "id": "filter_32",
+      "source": "hupu",
+      "title": "詹姆斯球迷回顾2016总决赛名场面",
+      "content_excerpt": "情怀回顾贴，与当天新闻没有直接关系。",
+      "matched_keywords": ["勒布朗-詹姆斯"],
+      "matched_categories": ["player"],
+      "score": 2,
+      "expected_keep": false
+    }
+  ],
+  "summary_cases": [
+    {
+      "id": "summary_01",
+      "expected_topics": ["湖人", "詹姆斯", "东契奇", "杜兰特"],
+      "items": [
+        {
+          "id": "summary_01_item_01",
+          "source": "hupu",
+          "title": "湖人赢球！詹姆斯准三双，末节掌控比赛",
+          "content_excerpt": "詹姆斯得到19分8篮板13助攻，季后赛首轮G1湖人取胜。",
+          "matched_keywords": ["湖人", "勒布朗-詹姆斯"],
+          "matched_categories": ["team", "player"],
+          "score": 8
+        },
+        {
+          "id": "summary_01_item_02",
+          "source": "hupu",
+          "title": "东契奇恢复训练，雷迪克称暂未参加投篮训练",
+          "content_excerpt": "东契奇已经回到训练馆，开始篮板和传球恢复训练。",
+          "matched_keywords": ["东契奇", "复出"],
+          "matched_categories": ["player", "topic"],
+          "score": 7
+        },
+        {
+          "id": "summary_01_item_03",
+          "source": "hupu",
+          "title": "Shams：杜兰特G2复出仍有希望，但要看恢复反应",
+          "content_excerpt": "火箭对杜兰特下一场复出仍保持乐观。",
+          "matched_keywords": ["伤病", "复出"],
+          "matched_categories": ["topic"],
+          "score": 7
+        }
+      ]
+    },
+    {
+      "id": "summary_02",
+      "expected_topics": ["詹姆斯", "杜兰特", "湖人"],
+      "items": [
+        {
+          "id": "summary_02_item_01",
+          "source": "hupu",
+          "title": "韦德：听说杜兰特缺阵后，就知道詹姆斯会掌控比赛",
+          "content_excerpt": "韦德评价詹姆斯在系列赛首战的比赛掌控力。",
+          "matched_keywords": ["勒布朗-詹姆斯", "伤病"],
+          "matched_categories": ["player", "topic"],
+          "score": 7
+        },
+        {
+          "id": "summary_02_item_02",
+          "source": "hupu",
+          "title": "杜兰特膝伤恢复情况仍需观察",
+          "content_excerpt": "G2是否出战依然悬而未决。",
+          "matched_keywords": ["伤病", "复出"],
+          "matched_categories": ["topic"],
+          "score": 6
+        },
+        {
+          "id": "summary_02_item_03",
+          "source": "hupu",
+          "title": "湖人主场G1取胜后，詹姆斯刷新季后赛最老助攻上双纪录",
+          "content_excerpt": "比赛结果加里程碑信息，具备高摘要价值。",
+          "matched_keywords": ["湖人", "勒布朗-詹姆斯"],
+          "matched_categories": ["team", "player"],
+          "score": 8
+        }
+      ]
+    },
+    {
+      "id": "summary_03",
+      "expected_topics": ["库里", "勇士", "交易"],
+      "items": [
+        {
+          "id": "summary_03_item_01",
+          "source": "hupu",
+          "title": "勇士赛季结束后，围绕库里的补强方向引发热议",
+          "content_excerpt": "多方讨论勇士是否需要调整持球和锋线资源。",
+          "matched_keywords": ["勇士", "斯蒂芬-库里", "交易"],
+          "matched_categories": ["team", "player", "topic"],
+          "score": 6
+        },
+        {
+          "id": "summary_03_item_02",
+          "source": "hupu",
+          "title": "库里缺席季后赛后，勇士未来建队方向成为焦点",
+          "content_excerpt": "围绕库里年龄、窗口期和球队阵容上限展开讨论。",
+          "matched_keywords": ["勇士", "斯蒂芬-库里"],
+          "matched_categories": ["team", "player"],
+          "score": 5
+        },
+        {
+          "id": "summary_03_item_03",
+          "source": "hupu",
+          "title": "勇士休赛期若有交易动作，外线和侧翼将是重点位置",
+          "content_excerpt": "球队后续补强方向被广泛讨论。",
+          "matched_keywords": ["勇士", "交易"],
+          "matched_categories": ["team", "topic"],
+          "score": 5
+        }
+      ]
+    },
+    {
+      "id": "summary_04",
+      "expected_topics": ["东契奇", "湖人", "八村垒", "复出"],
+      "items": [
+        {
+          "id": "summary_04_item_01",
+          "source": "hupu",
+          "title": "雷迪克：东契奇回到训练馆后，球队会继续控制训练量",
+          "content_excerpt": "东契奇恢复过程进入下一阶段，但仍未回到全强度。",
+          "matched_keywords": ["湖人", "东契奇", "复出"],
+          "matched_categories": ["team", "player", "topic"],
+          "score": 7
+        },
+        {
+          "id": "summary_04_item_02",
+          "source": "hupu",
+          "title": "八村垒：东契奇归队后大家都很开心，氛围明显不同",
+          "content_excerpt": "球员采访强调东契奇回归对湖人内部化学反应的影响。",
+          "matched_keywords": ["湖人", "东契奇"],
+          "matched_categories": ["team", "player"],
+          "score": 6
+        },
+        {
+          "id": "summary_04_item_03",
+          "source": "hupu",
+          "title": "东契奇有望在系列赛中段复出，时间表逐渐清晰",
+          "content_excerpt": "球队会根据训练反馈评估出战时间。",
+          "matched_keywords": ["东契奇", "复出"],
+          "matched_categories": ["player", "topic"],
+          "score": 7
+        }
+      ]
+    },
+    {
+      "id": "summary_05",
+      "expected_topics": ["詹姆斯", "珍妮-巴斯", "退役", "湖人"],
+      "items": [
+        {
+          "id": "summary_05_item_01",
+          "source": "hupu",
+          "title": "珍妮-巴斯：詹姆斯自己手握决定权，也可能悄无声息退役",
+          "content_excerpt": "湖人老板谈詹姆斯未来和今夏去向。",
+          "matched_keywords": ["湖人", "勒布朗-詹姆斯"],
+          "matched_categories": ["team", "player"],
+          "score": 7
+        },
+        {
+          "id": "summary_05_item_02",
+          "source": "hupu",
+          "title": "詹姆斯赛后谈身体状态：会持续观察反应",
+          "content_excerpt": "老将状态与未来选择被外界关注。",
+          "matched_keywords": ["勒布朗-詹姆斯", "伤病"],
+          "matched_categories": ["player", "topic"],
+          "score": 6
+        },
+        {
+          "id": "summary_05_item_03",
+          "source": "hupu",
+          "title": "湖人是否会在今夏继续围绕詹姆斯搭建阵容？",
+          "content_excerpt": "管理层与未来建队方向成为讨论焦点。",
+          "matched_keywords": ["湖人", "勒布朗-詹姆斯", "交易"],
+          "matched_categories": ["team", "player", "topic"],
+          "score": 5
+        }
+      ]
+    },
+    {
+      "id": "summary_06",
+      "expected_topics": ["伤病", "复出", "杜兰特", "系列赛"],
+      "items": [
+        {
+          "id": "summary_06_item_01",
+          "source": "hupu",
+          "title": "Shams：杜兰特G2复出仍有希望，但要看恢复反应",
+          "content_excerpt": "权威记者更新系列赛G2前伤病动态。",
+          "matched_keywords": ["伤病", "复出"],
+          "matched_categories": ["topic"],
+          "score": 7
+        },
+        {
+          "id": "summary_06_item_02",
+          "source": "hupu",
+          "title": "卡佩拉：没人能取代杜兰特，希望他下一场回归",
+          "content_excerpt": "球员采访进一步强化了对杜兰特G2复出的关注。",
+          "matched_keywords": ["伤病", "复出"],
+          "matched_categories": ["topic"],
+          "score": 6
+        },
+        {
+          "id": "summary_06_item_03",
+          "source": "hupu",
+          "title": "杜兰特伤势来源曝光，训练中对抗导致膝伤",
+          "content_excerpt": "伤病背景被披露，对系列赛走势影响明显。",
+          "matched_keywords": ["伤病"],
+          "matched_categories": ["topic"],
+          "score": 6
+        }
+      ]
+    }
+  ]
+}

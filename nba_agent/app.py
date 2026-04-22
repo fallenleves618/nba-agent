@@ -11,15 +11,18 @@ from nba_agent.collectors import (
 )
 from nba_agent.config import (
     load_agent_filter_settings,
+    load_agent_prompt_settings,
     load_delivery_settings,
     load_hupu_settings,
     load_keyword_rules,
+    list_prompt_versions,
     load_report_settings,
     load_settings,
     load_tieba_settings,
 )
 from nba_agent.delivery.console import deliver_to_console
 from nba_agent.delivery.webhook import deliver_to_webhooks
+from nba_agent.eval import run_local_eval, run_prompt_comparison_eval
 from nba_agent.models import (
     CollectedItem,
     DailyRunResult,
@@ -36,6 +39,7 @@ from nba_agent.pipeline.agent_filter import (
     generate_hot_news_summary,
     select_summary_candidates,
 )
+from nba_agent.pipeline.facts import build_fact_summary_text
 from nba_agent.pipeline.keywords import apply_keyword_rules
 from nba_agent.pipeline.report import build_daily_report
 from nba_agent.storage.sqlite_store import SQLiteStore
@@ -86,13 +90,20 @@ def run_pipeline(demo: bool = False, *, hupu_only: bool = False) -> DailyRunResu
     hupu_settings = load_hupu_settings(settings.hupu_path)
     tieba_settings = load_tieba_settings(settings.tieba_path)
     agent_filter_settings = load_agent_filter_settings(settings.agent_filter_path)
+    agent_prompt_settings = load_agent_prompt_settings(
+        settings.prompts_path,
+        prompts_dir=settings.prompts_dir,
+    )
     delivery_settings = load_delivery_settings(settings.delivery_path)
     report_settings = load_report_settings(settings.report_path)
     store = SQLiteStore(settings.db_path)
     store.init_db()
     recent_scores: list[ScoreGame] = []
-    diagnostics = _build_runtime_diagnostics(agent_filter_settings)
+    diagnostics = _build_runtime_diagnostics(
+        agent_filter_settings, agent_prompt_settings
+    )
     stage_timings: dict[str, float] = {}
+    fact_summary = ""
 
     if not demo and not hupu_only:
         print("[progress] fetching recent scores ...", flush=True)
@@ -104,6 +115,7 @@ def run_pipeline(demo: bool = False, *, hupu_only: bool = False) -> DailyRunResu
             f"in {stage_timings['recent_scores']:.1f}s",
             flush=True,
         )
+        fact_summary = build_fact_summary_text(recent_scores)
 
     collected, collect_timings = _collect_items(
         demo=demo,
@@ -124,7 +136,9 @@ def run_pipeline(demo: bool = False, *, hupu_only: bool = False) -> DailyRunResu
     print(f"[progress] deduped to {len(deduped)} items", flush=True)
     print("[progress] model filtering ...", flush=True)
     started_at = time.time()
-    agent_filtered = filter_items_with_agent(deduped, agent_filter_settings)
+    agent_filtered = filter_items_with_agent(
+        deduped, agent_filter_settings, agent_prompt_settings
+    )
     stage_timings["model_filter"] = time.time() - started_at
     print(
         f"[progress] model kept {len(agent_filtered)} items "
@@ -134,7 +148,12 @@ def run_pipeline(demo: bool = False, *, hupu_only: bool = False) -> DailyRunResu
     summary_inputs = select_summary_candidates(agent_filtered, agent_filter_settings)
     print("[progress] generating hot-news summary ...", flush=True)
     started_at = time.time()
-    hot_news_summary = generate_hot_news_summary(agent_filtered, agent_filter_settings)
+    hot_news_summary = generate_hot_news_summary(
+        agent_filtered,
+        agent_filter_settings,
+        agent_prompt_settings,
+        fact_summary=fact_summary,
+    )
     stage_timings["hot_news_summary"] = time.time() - started_at
     print(
         f"[progress] summary length {len(hot_news_summary)} "
@@ -171,6 +190,7 @@ def run_pipeline(demo: bool = False, *, hupu_only: bool = False) -> DailyRunResu
 
 def _build_runtime_diagnostics(
     settings,
+    prompt_settings,
 ) -> list[str]:
     diagnostics: list[str] = []
     model_text = (
@@ -179,6 +199,9 @@ def _build_runtime_diagnostics(
         f"base_url={settings.api_base_url or '未配置'}"
     )
     diagnostics.append(model_text)
+    diagnostics.append(
+        f"筛选Prompt={prompt_settings.filter_version}, 总结Prompt={prompt_settings.summary_version}"
+    )
     if not settings.api_base_url or not settings.api_key or not settings.model:
         diagnostics.append(
             "模型环境变量未完整加载。先执行 `source ~/.zshrc`，再运行命令。"
@@ -215,6 +238,16 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Run only the Hupu collector",
     )
+    parser.add_argument(
+        "--eval",
+        action="store_true",
+        help="Run the local prompt evaluation dataset and exit",
+    )
+    parser.add_argument(
+        "--eval-compare",
+        action="store_true",
+        help="Compare all prompt versions on the local evaluation dataset and exit",
+    )
     return parser.parse_args()
 
 
@@ -226,6 +259,34 @@ def main() -> None:
     if args.init_db:
         store.init_db()
         print(f"initialized db at {settings.db_path}")
+        return
+
+    if args.eval:
+        agent_filter_settings = load_agent_filter_settings(settings.agent_filter_path)
+        agent_prompt_settings = load_agent_prompt_settings(
+            settings.prompts_path,
+            prompts_dir=settings.prompts_dir,
+        )
+        print(
+            run_local_eval(
+                settings.eval_dataset_path,
+                filter_settings=agent_filter_settings,
+                prompt_settings=agent_prompt_settings,
+            )
+        )
+        return
+
+    if args.eval_compare:
+        agent_filter_settings = load_agent_filter_settings(settings.agent_filter_path)
+        print(
+            run_prompt_comparison_eval(
+                settings.eval_dataset_path,
+                filter_settings=agent_filter_settings,
+                prompts_dir=settings.prompts_dir,
+                filter_versions=list_prompt_versions(settings.prompts_dir, "filter"),
+                summary_versions=list_prompt_versions(settings.prompts_dir, "summary"),
+            )
+        )
         return
 
     result = run_pipeline(demo=args.demo, hupu_only=args.hupu_only)

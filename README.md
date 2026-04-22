@@ -8,6 +8,7 @@
 - 支持 SQLite 存储
 - 支持控制台日报输出
 - 支持展示 NBA 官方最近两天比赛比分
+- 支持展示基于 NBA 官方比分生成的事实源摘要
 - 支持可选的模型二次筛选
 - 支持 `--demo` 模式验证流水线
 - 已预留虎扑、贴吧、官方信息源 collector 骨架
@@ -29,6 +30,8 @@ nba_agent/
   delivery/      # 输出渠道
   scheduler/     # 定时任务入口
   config/        # 关键词配置
+  prompts/       # Prompt 版本文件
+  eval/          # 本地评估集
 ```
 
 ## 快速开始
@@ -36,6 +39,18 @@ nba_agent/
 ```bash
 cd /Users/yizhou.wu/nba-agent
 python3 -m nba_agent.app --demo
+```
+
+运行本地评估集：
+
+```bash
+python3 -m nba_agent.app --eval
+```
+
+运行多 Prompt 对比评估：
+
+```bash
+python3 -m nba_agent.app --eval-compare
 ```
 
 初始化数据库：
@@ -55,10 +70,15 @@ python3 -m nba_agent.app
 - `--demo` 会生成几条模拟内容，验证关键词过滤、去重、入库、日报流程。
 - 不加 `--demo` 时会执行当前 collector。虎扑入口和球队专区已经改成配置驱动；贴吧默认走稳定的社区发现模式，另外预留了默认关闭的实验性帖子抓取开关。
 - 日报顶部会展示 NBA 官方最近两天有实际比分的比赛日，数据来自 `scheduleLeagueV2.json`。
+- 日报会在比分明细后生成一个 `事实源摘要` 区块，用官方比分提炼最近比赛日的关键结果、分差和系列赛进度。
+- 日报现在会为不同来源显示 `来源可信度` 标签，例如 `official` 会标为高可信官方事实源，`hupu` 和 `tieba` 会标为不同层级的社区来源。
+- 高热度总结现在会显式参考这段 `事实源摘要`，优先以官方比分为事实基线，再总结社区热议。
+- 排序和总结候选现在也会优先考虑 `official` 来源，其次才是 `hupu`、`tieba` 等社区来源。
 - 如果开启 `config/agent_filter.json`，会在关键词筛选和去重之后，再调用模型做一次保留/丢弃判断。
 - 日报输出条数也支持配置，见 `config/report.json`。
 - 日报现在支持 `console + 飞书 + 企业微信` 推送，见 `config/delivery.json`。
 - 日报会额外展示 `运行耗时`、`总结输入 Top`，并在条目里显示 `Agent评分 / Agent理由`。
+- Prompt 已支持版本管理，当前选择见 `config/prompts.json`。
 
 ## 配置关键词
 
@@ -258,6 +278,64 @@ python3 -m nba_agent.app --hupu-only
 
 如果同时开启 `summary_enabled`，日报顶部还会新增“今日高热度新闻总结”区块。
 
+## 配置 Prompt 版本
+
+编辑 [config/prompts.json](/Users/yizhou.wu/nba-agent/config/prompts.json:1)：
+
+```json
+{
+  "filter_prompt_version": "filter_v1",
+  "summary_prompt_version": "summary_v1"
+}
+```
+
+说明：
+
+- `filter_prompt_version`：选择筛选 prompt 版本，对应 `prompts/filter/<version>.txt`
+- `summary_prompt_version`：选择总结 prompt 版本，对应 `prompts/summary/<version>.txt`
+
+当前内置版本：
+
+- `filter_v1`：标准筛选
+- `filter_v2`：更保守，压低社区噪声
+- `summary_v1`：标准高热度总结
+- `summary_v2`：更偏群聊晨报风格
+
+## 运行评估
+
+评估集文件在 [eval/dataset.json](/Users/yizhou.wu/nba-agent/eval/dataset.json:1)，当前包含：
+
+- `filter_cases`：评估筛选是否保留
+- `summary_cases`：评估总结是否覆盖预期主题
+
+执行：
+
+```bash
+python3 -m nba_agent.app --eval
+```
+
+如果要对比所有筛选 / 总结 prompt 版本：
+
+```bash
+python3 -m nba_agent.app --eval-compare
+```
+
+输出包括：
+
+- 当前筛选 prompt 版本
+- 当前总结 prompt 版本
+- 筛选准确率
+- 总结主题覆盖率
+- 筛选误判分类汇总
+- 筛选误差样本
+- 总结样本详情
+
+`--eval-compare` 会输出：
+
+- 所有筛选 prompt 版本的准确率排行
+- 每个筛选 prompt 当前最主要的误判类型
+- 所有总结 prompt 版本的主题覆盖率排行
+
 ## 配置推送
 
 编辑 [config/delivery.json](/Users/yizhou.wu/nba-agent/config/delivery.json:1)：
@@ -311,4 +389,3 @@ python3 -m nba_agent.app
 ```
 
 定时任务 [daily_job.py](/Users/yizhou.wu/nba-agent/nba_agent/scheduler/daily_job.py:1) 不需要额外改动，配置好后会直接沿用推送设置。
-

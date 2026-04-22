@@ -65,6 +65,14 @@ class DailyRunResult:
 
 
 @dataclass
+class AgentPromptSettings:
+    filter_version: str = "filter_v1"
+    summary_version: str = "summary_v1"
+    filter_system_prompt: str = ""
+    summary_system_prompt: str = ""
+
+
+@dataclass
 class HupuSource:
     name: str
     url: str

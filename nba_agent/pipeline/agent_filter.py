@@ -4,34 +4,8 @@ import json
 from dataclasses import dataclass
 
 from nba_agent.http import post_json
-from nba_agent.models import AgentFilterSettings, CollectedItem
-
-
-SYSTEM_PROMPT = """你是一个 NBA 中文日报筛选器。
-目标：从候选内容里只保留真正值得进入日报的内容。
-
-保留标准：
-1. 与 NBA 明确相关，而不是泛体育或无关噪声。
-2. 对今天的读者有信息价值，例如比赛、伤病、交易、赛后分析、重点讨论。
-3. 去掉重复表达、纯水贴、标题党、信息密度极低的内容。
-4. 如果是贴吧社区发现类内容，除非它本身是高相关入口且有明显价值，否则倾向丢弃。
-
-输出要求：
-1. 只返回 JSON。
-2. JSON 结构必须是 {"decisions":[...]}。
-3. 每个 decision 必须包含 id、keep、score、reason。
-4. score 取 1 到 10 的整数。
-"""
-
-SUMMARY_SYSTEM_PROMPT = """你是一个 NBA 中文日报编辑。
-你的任务是根据候选内容，总结当天最值得读者关注的高热度新闻。
-
-要求：
-1. 只总结输入里明确出现的信息，不要补充外部事实。
-2. 输出中文简报，3 到 5 条，每条一行，以 '- ' 开头。
-3. 优先总结比赛结果、伤病、交易、重大赛后讨论、热度最高的话题。
-4. 避免重复，避免空话，句子短一些。
-"""
+from nba_agent.models import AgentFilterSettings, AgentPromptSettings, CollectedItem
+from nba_agent.pipeline.source_priority import source_priority
 
 
 @dataclass
@@ -43,7 +17,9 @@ class AgentDecision:
 
 
 def filter_items_with_agent(
-    items: list[CollectedItem], settings: AgentFilterSettings
+    items: list[CollectedItem],
+    settings: AgentFilterSettings,
+    prompt_settings: AgentPromptSettings,
 ) -> list[CollectedItem]:
     if not items or not _is_filter_enabled(settings):
         return items
@@ -51,7 +27,7 @@ def filter_items_with_agent(
     kept: list[CollectedItem] = []
     for start in range(0, len(items), settings.batch_size):
         batch = items[start : start + settings.batch_size]
-        decisions = _request_batch_decisions(batch, settings)
+        decisions = _request_batch_decisions(batch, settings, prompt_settings)
         decision_map = {decision.item_id: decision for decision in decisions}
 
         for idx, item in enumerate(batch, start=1):
@@ -86,18 +62,26 @@ def _is_model_configured(settings: AgentFilterSettings) -> bool:
 
 
 def generate_hot_news_summary(
-    items: list[CollectedItem], settings: AgentFilterSettings
+    items: list[CollectedItem],
+    settings: AgentFilterSettings,
+    prompt_settings: AgentPromptSettings,
+    fact_summary: str = "",
 ) -> str:
     summary_candidates = select_summary_candidates(items, settings)
     if not summary_candidates:
         return ""
     if not _is_summary_enabled(settings):
-        return _fallback_hot_news_summary(summary_candidates)
+        return _fallback_hot_news_summary(summary_candidates, fact_summary=fact_summary)
 
-    summary_text = _request_summary_text(summary_candidates, settings)
+    summary_text = _request_summary_text(
+        summary_candidates,
+        settings,
+        prompt_settings,
+        fact_summary=fact_summary,
+    )
     if summary_text.strip():
         return summary_text
-    return _fallback_hot_news_summary(summary_candidates)
+    return _fallback_hot_news_summary(summary_candidates, fact_summary=fact_summary)
 
 
 def select_summary_candidates(
@@ -109,6 +93,7 @@ def select_summary_candidates(
     ranked_items = sorted(
         items,
         key=lambda item: (
+            source_priority(item.source),
             item.agent_score is not None,
             item.agent_score if item.agent_score is not None else item.score,
             item.score,
@@ -120,10 +105,11 @@ def select_summary_candidates(
     return ranked_items[: settings.summary_top_n]
 
 
-def _fallback_hot_news_summary(items: list[CollectedItem]) -> str:
+def _fallback_hot_news_summary(items: list[CollectedItem], fact_summary: str = "") -> str:
     ranked_items = sorted(
         items,
         key=lambda item: (
+            source_priority(item.source),
             item.agent_score is not None,
             item.agent_score if item.agent_score is not None else item.score,
             item.score,
@@ -133,6 +119,8 @@ def _fallback_hot_news_summary(items: list[CollectedItem]) -> str:
         reverse=True,
     )
     lines: list[str] = []
+    if fact_summary.strip():
+        lines.append("- 官方事实摘要：最近比赛日比分与系列赛进度已纳入本次总结参考。")
     for item in ranked_items[:3]:
         keywords = "、".join(item.matched_keywords[:3]) if item.matched_keywords else item.source
         lines.append(f"- {item.title}。关键词：{keywords}。")
@@ -140,11 +128,13 @@ def _fallback_hot_news_summary(items: list[CollectedItem]) -> str:
 
 
 def _request_batch_decisions(
-    items: list[CollectedItem], settings: AgentFilterSettings
+    items: list[CollectedItem],
+    settings: AgentFilterSettings,
+    prompt_settings: AgentPromptSettings,
 ) -> list[AgentDecision]:
     response_text = _request_chat_completion(
         settings=settings,
-        system_prompt=SYSTEM_PROMPT,
+        system_prompt=prompt_settings.filter_system_prompt,
         user_prompt=_build_user_prompt(items),
     )
     if not response_text:
@@ -157,12 +147,15 @@ def _request_batch_decisions(
 
 
 def _request_summary_text(
-    items: list[CollectedItem], settings: AgentFilterSettings
+    items: list[CollectedItem],
+    settings: AgentFilterSettings,
+    prompt_settings: AgentPromptSettings,
+    fact_summary: str = "",
 ) -> str:
     response_text = _request_chat_completion(
         settings=settings,
-        system_prompt=SUMMARY_SYSTEM_PROMPT,
-        user_prompt=_build_summary_prompt(items),
+        system_prompt=prompt_settings.summary_system_prompt,
+        user_prompt=_build_summary_prompt(items, fact_summary=fact_summary),
     )
     return _strip_code_fences(response_text)
 
@@ -318,7 +311,7 @@ def _build_user_prompt(items: list[CollectedItem]) -> str:
     )
 
 
-def _build_summary_prompt(items: list[CollectedItem]) -> str:
+def _build_summary_prompt(items: list[CollectedItem], fact_summary: str = "") -> str:
     candidates = []
     for idx, item in enumerate(items, start=1):
         candidates.append(
@@ -332,9 +325,18 @@ def _build_summary_prompt(items: list[CollectedItem]) -> str:
                 "rule_score": item.score,
             }
         )
+    fact_block = (
+        "官方事实摘要：\n"
+        f"{fact_summary.strip()}\n\n"
+        "请先参考上面的官方事实，再综合下面的社区/媒体候选内容。\n"
+        "输出时优先保证事实口径准确，并尽量区分“客观发生了什么”和“社区在讨论什么”。\n\n"
+        if fact_summary.strip()
+        else ""
+    )
     return (
         "请总结以下候选内容中当天最值得关注的高热度新闻。\n"
         "输出 3 到 5 条中文要点，每条以 '- ' 开头。\n\n"
+        f"{fact_block}"
         f"{json.dumps(candidates, ensure_ascii=False, indent=2)}"
     )
 

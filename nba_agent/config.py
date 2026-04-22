@@ -7,6 +7,7 @@ from pathlib import Path
 
 from nba_agent.models import (
     AgentFilterSettings,
+    AgentPromptSettings,
     DeliveryChannelSettings,
     DeliverySettings,
     HupuSettings,
@@ -28,6 +29,9 @@ class Settings:
     hupu_path: Path
     tieba_path: Path
     agent_filter_path: Path
+    prompts_path: Path
+    prompts_dir: Path
+    eval_dataset_path: Path
     delivery_path: Path
     report_path: Path
 
@@ -41,6 +45,9 @@ def load_settings(base_dir: Path | None = None) -> Settings:
         hupu_path=project_dir / "config" / "hupu.json",
         tieba_path=project_dir / "config" / "tieba.json",
         agent_filter_path=project_dir / "config" / "agent_filter.json",
+        prompts_path=project_dir / "config" / "prompts.json",
+        prompts_dir=project_dir / "prompts",
+        eval_dataset_path=project_dir / "eval" / "dataset.json",
         delivery_path=project_dir / "config" / "delivery.json",
         report_path=project_dir / "config" / "report.json",
     )
@@ -167,6 +174,38 @@ def load_agent_filter_settings(path: Path) -> AgentFilterSettings:
         min_score=max(1, min(10, int(data.get("min_score", 6)))),
         summary_top_n=max(3, int(data.get("summary_top_n", 8))),
     )
+
+
+def load_agent_prompt_settings(
+    config_path: Path,
+    *,
+    prompts_dir: Path,
+) -> AgentPromptSettings:
+    data = json.loads(config_path.read_text(encoding="utf-8"))
+    filter_version = str(data.get("filter_prompt_version", "filter_v1")).strip() or "filter_v1"
+    summary_version = str(data.get("summary_prompt_version", "summary_v1")).strip() or "summary_v1"
+
+    return AgentPromptSettings(
+        filter_version=filter_version,
+        summary_version=summary_version,
+        filter_system_prompt=_load_prompt_text(
+            prompts_dir / "filter" / f"{filter_version}.txt"
+        ),
+        summary_system_prompt=_load_prompt_text(
+            prompts_dir / "summary" / f"{summary_version}.txt"
+        ),
+    )
+
+
+def _load_prompt_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8").strip()
+
+
+def list_prompt_versions(prompts_dir: Path, category: str) -> list[str]:
+    category_dir = prompts_dir / category
+    if not category_dir.exists():
+        return []
+    return sorted(path.stem for path in category_dir.glob("*.txt") if path.is_file())
 
 
 def load_delivery_settings(path: Path) -> DeliverySettings:

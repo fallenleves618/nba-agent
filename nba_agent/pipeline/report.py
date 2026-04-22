@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 
 from nba_agent.models import CollectedItem, ReportSettings, ScoreGame
+from nba_agent.pipeline.facts import build_fact_summary_text
+from nba_agent.pipeline.source_priority import source_priority
 
 
 CATEGORY_PRIORITY = ["team", "player", "topic", "generic"]
@@ -11,6 +13,12 @@ CATEGORY_LABELS = {
     "player": "球员",
     "topic": "主题",
     "generic": "其他",
+}
+SOURCE_CREDIBILITY_LABELS = {
+    "official": "高可信·官方事实源",
+    "hupu": "中可信·社区转载/讨论",
+    "tieba": "低可信·社区入口/讨论",
+    "demo": "演示数据",
 }
 
 
@@ -34,7 +42,12 @@ def _primary_category(item: CollectedItem) -> str:
 def _ranked_items(items: list[CollectedItem]) -> list[CollectedItem]:
     return sorted(
         items,
-        key=lambda item: (item.score, item.publish_time is not None, item.publish_time),
+        key=lambda item: (
+            source_priority(item.source),
+            item.score,
+            item.publish_time is not None,
+            item.publish_time,
+        ),
         reverse=True,
     )
 
@@ -61,6 +74,7 @@ def _append_item_lines(
     for idx, item in enumerate(items, start=1):
         matched = ", ".join(item.matched_keywords) if item.matched_keywords else "无"
         lines.append(f"{idx}. [{item.source}] {item.title}")
+        lines.append(f"   来源可信度: {_source_credibility_label(item.source)}")
         if include_category_line and item.matched_categories:
             lines.append(f"   命中分类: {', '.join(item.matched_categories)}")
         lines.append(f"   命中关键词: {matched}")
@@ -101,6 +115,17 @@ def _append_recent_scores(lines: list[str], recent_scores: list[ScoreGame]) -> N
             if game.series_text:
                 lines.append(f"  系列赛: {game.series_text}")
         lines.append("")
+
+
+def _append_fact_summary(lines: list[str], recent_scores: list[ScoreGame]) -> None:
+    fact_summary = build_fact_summary_text(recent_scores)
+    if not fact_summary:
+        return
+
+    lines.append("事实源摘要")
+    lines.append("")
+    lines.extend(fact_summary.splitlines())
+    lines.append("")
 
 
 def _append_hot_news_summary(lines: list[str], hot_news_summary: str) -> None:
@@ -160,6 +185,19 @@ def _append_diagnostics(lines: list[str], diagnostics: list[str]) -> None:
     lines.append("")
 
 
+def _append_source_credibility(lines: list[str], source_counter: Counter[str]) -> None:
+    if not source_counter:
+        return
+
+    lines.append("来源可信度说明")
+    lines.append("")
+    for source, count in _sorted_sources(source_counter):
+        lines.append(
+            f"- {source}: {_source_credibility_label(source)}，优先级 {source_priority(source)}，当前 {count} 条"
+        )
+    lines.append("")
+
+
 def build_daily_report(
     items: list[CollectedItem],
     settings: ReportSettings | None = None,
@@ -172,6 +210,7 @@ def build_daily_report(
     if not items:
         lines = ["今日 NBA 日报", ""]
         _append_recent_scores(lines, recent_scores or [])
+        _append_fact_summary(lines, recent_scores or [])
         _append_hot_news_summary(lines, hot_news_summary)
         _append_summary_inputs(lines, summary_inputs or [])
         _append_stage_timings(lines, stage_timings or {})
@@ -184,13 +223,14 @@ def build_daily_report(
     source_counter = Counter(item.source for item in items)
     lines = ["今日 NBA 日报", ""]
     _append_recent_scores(lines, recent_scores or [])
+    _append_fact_summary(lines, recent_scores or [])
     _append_hot_news_summary(lines, hot_news_summary)
     _append_summary_inputs(lines, summary_inputs or [])
     _append_stage_timings(lines, stage_timings or {})
     lines.append(
         "来源概览: "
         + ", ".join(
-            f"{source} {count} 条" for source, count in sorted(source_counter.items())
+            f"{source} {count} 条" for source, count in _sorted_sources(source_counter)
         )
     )
     if report_settings.per_source_top_n is not None:
@@ -198,6 +238,7 @@ def build_daily_report(
             f"来源限流: 每个区段每个来源最多保留 {report_settings.per_source_top_n} 条"
         )
     lines.append("")
+    _append_source_credibility(lines, source_counter)
 
     ranked = _ranked_items(items)
     overview_items = _limit_items_by_source(ranked, report_settings.per_source_top_n)
@@ -230,3 +271,13 @@ def build_daily_report(
 
     _append_diagnostics(lines, diagnostics or [])
     return "\n".join(lines).rstrip()
+def _source_credibility_label(source: str) -> str:
+    return SOURCE_CREDIBILITY_LABELS.get(source, "未分级来源")
+
+
+def _sorted_sources(source_counter: Counter[str]) -> list[tuple[str, int]]:
+    return sorted(
+        source_counter.items(),
+        key=lambda item: (source_priority(item[0]), item[1], item[0]),
+        reverse=True,
+    )
